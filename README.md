@@ -14,10 +14,7 @@ The primary implementation leverages Filament's Relation Manager pattern, which 
 
 - **Native Integration**: Seamlessly integrates with the existing Filament admin panel architecture
 - **Consistency**: Follows the same patterns used throughout the project
-- **Built-in Features**: Leverages Filament's built-in authorization, validation, and UI components
-- **Less Code**: Significantly less boilerplate compared to custom API controllers
 - **Maintainability**: Easier to maintain as it follows the project's established conventions
-- **Type Safety**: Better IDE support and type checking through Filament's form/table builders
 
 **Implementation Details:**
 
@@ -37,8 +34,6 @@ The primary implementation leverages Filament's Relation Manager pattern, which 
     ├── database\factories\ProjectFactory.php
     └── database\factories\ProjectStatusFactory.php
     ```
-- Provides full CRUD operations through Filament's admin interface
-- Real-time status updates with visual indicators
 - Role-based access control using existing project permissions
 - Automatic chain deactivation when creating new chains
 
@@ -75,7 +70,7 @@ archive/
 1. **Clone the repository:**
 
 ```bash
-git https://github.com/KareemAlaa1/project-management.git
+git clone https://github.com/KareemAlaa1/project-management.git
 cd project-management
 ```
 
