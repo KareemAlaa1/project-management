@@ -1,0 +1,218 @@
+openapi: 3.0.4
+info:
+  title: Project Approval Chain API
+  version: 1.0.0
+  description: |
+    This API manages project approval chains, allowing project owners and managers to define,
+    view, and progress approval sequences for projects.
+servers:
+  - url: https://api.example.com/api
+    description: Production server
+  - url: http://localhost:8000/api
+    description: Local development server
+
+tags:
+  - name: Approval Chains
+    description: Endpoints for managing project approval workflows.
+
+paths:
+  /projects/{project}/approval-chains:
+    get:
+      tags: ["Approval Chains"]
+      summary: Fetch active approval chain for a project
+      description: Retrieve the currently active approval chain for a given project.
+      security:
+        - sanctum: []
+      parameters:
+        - name: project
+          in: path
+          required: true
+          description: The ID of the project
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Active approval chain retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ApprovalChain'
+        '404':
+          description: No active approval chain found
+
+    post:
+      tags: ["Approval Chains"]
+      summary: Create a new approval chain for a project
+      description: Create a new approval chain for a specific project. Only project owners or managers can perform this action.
+      security:
+        - sanctum: []
+      parameters:
+        - name: project
+          in: path
+          required: true
+          description: The ID of the project
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: ["users"]
+              properties:
+                users:
+                  type: array
+                  description: List of user IDs in approval sequence (first is initial approver)
+                  items:
+                    type: integer
+                    example: 3
+      responses:
+        '201':
+          description: Approval chain created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Approval chain created successfully
+                  data:
+                    $ref: '#/components/schemas/ApprovalChain'
+        '403':
+          description: Unauthorized action
+        '422':
+          description: Validation failed
+
+  /approval-chains/{approvalChain}/approve:
+    post:
+      tags: ["Approval Chains"]
+      summary: Approve and forward approval chain to next user
+      description: Used by the current approver to approve and move the approval chain to the next user.
+      security:
+        - sanctum: []
+      parameters:
+        - name: approvalChain
+          in: path
+          required: true
+          description: The ID of the approval chain
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Approval successfully forwarded to next user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Project approved and forwarded to next approver
+                  data:
+                    $ref: '#/components/schemas/ApprovalChain'
+        '403':
+          description: Unauthorized action
+
+  /approval-chains/{approvalChain}:
+    get:
+      tags: ["Approval Chains"]
+      summary: Get details of a specific approval chain
+      description: Fetch full details of a specific approval chain, including user sequence and status.
+      security:
+        - sanctum: []
+      parameters:
+        - name: approvalChain
+          in: path
+          required: true
+          description: The ID of the approval chain
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Approval chain details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ApprovalChain'
+        '404':
+          description: Approval chain not found
+
+components:
+  securitySchemes:
+    sanctum:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApprovalChain:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 7
+        project_id:
+          type: integer
+          example: 1
+        is_active:
+          type: boolean
+          example: true
+        creator:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Admin User
+        chain_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalChainUser'
+
+    ApprovalChainUser:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 3
+        sequence:
+          type: integer
+          example: 1
+        is_current:
+          type: boolean
+          example: true
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 3
+            name:
+              type: string
+              example: John Doe
