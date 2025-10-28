@@ -1,4 +1,4 @@
-# Approval Chain Feature - Project Submission
+# Approval Chain Feature Submission
 
 ## Overview
 
