@@ -13,7 +13,7 @@ The primary implementation leverages Filament's Relation Manager pattern, which 
 **Key advantages:**
 
 - **Native Integration**: Seamlessly integrates with the existing Filament admin panel architecture
-- **Consistency**: Follows the same patterns used throughout the project (e.g., ProjectUsers, TaskAssignments)
+- **Consistency**: Follows the same patterns used throughout the project
 - **Built-in Features**: Leverages Filament's built-in authorization, validation, and UI components
 - **Less Code**: Significantly less boilerplate compared to custom API controllers
 - **Maintainability**: Easier to maintain as it follows the project's established conventions
