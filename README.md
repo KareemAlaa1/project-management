@@ -1,161 +1,230 @@
-# Project Management
+# Approval Chain Feature - Project Submission
 
-<p align="center">
-    <a href="https://laravel.com"><img alt="Laravel v9.x" src="https://img.shields.io/badge/Laravel-v9.x-FF2D20?style=for-the-badge&logo=laravel"></a>
-    <a href="https://laravel-livewire.com"><img alt="Livewire v2.x" src="https://img.shields.io/badge/Livewire-v2.x-FB70A9?style=for-the-badge"></a>
-    <a href="https://filamentphp.com/"><img alt="Filament v2.x" src="https://img.shields.io/badge/Filament-v2.x-e9b228?style=for-the-badge"></a>
-    <a href="https://php.net"><img alt="PHP 8.0" src="https://img.shields.io/badge/PHP-8.0-777BB4?style=for-the-badge&logo=php"></a>
-    <br/>
-    <a href="https://github.com/devaslanphp/project-management/releases/">
-        <img src="https://img.shields.io/github/tag/devaslanphp/project-management?include_prereleases=&sort=semver&color=blue&style=for-the-badge" alt="GitHub tag">
-    </a>
-    <a href="#license">
-        <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
-    </a>
-    <a href="https://github.com/devaslanphp/project-management/issues">
-        <img src="https://img.shields.io/github/issues/devaslanphp/project-management?style=for-the-badge" alt="issues - project-management">
-    </a>
-    <br/>
-    <a href="https://devaslanphp.github.io/project-management" title="Go to project documentation">
-        <img src="https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge" alt="view - Documentation">
-    </a>
-    <br/>
-    <a href="https://hub.docker.com/r/eloufirhatim/helper/tags" title="Docker image">
-        <img src="https://img.shields.io/docker/v/eloufirhatim/helper?label=Docker&logo=docker&style=for-the-badge" alt="Docker image">
-    </a>
-</p>
+## Overview
 
-# Introduction
+This submission implements an Approval Chain feature for the project management system, allowing projects to go through a sequential approval process where designated users must approve in order before the project is marked as complete.
 
-![logo](readme-logo.png)
+## Implementation Approaches
 
-Helper, is a great tool if you want to manage your projects, tickets and be here for your clients
+### Primary Approach: Filament-Based Implementation (Recommended)
 
-It comes also with more than 60 languages ready to use.
+The primary implementation leverages Filament's Relation Manager pattern, which is the native and preferred approach for this project's architecture. This approach is located in the main codebase.
 
-All this made with the best technologies.
+**Key advantages:**
 
-## Prerequisites
+- **Native Integration**: Seamlessly integrates with the existing Filament admin panel architecture
+- **Consistency**: Follows the same patterns used throughout the project (e.g., ProjectUsers, TaskAssignments)
+- **Built-in Features**: Leverages Filament's built-in authorization, validation, and UI components
+- **Less Code**: Significantly less boilerplate compared to custom API controllers
+- **Maintainability**: Easier to maintain as it follows the project's established conventions
+- **Type Safety**: Better IDE support and type checking through Filament's form/table builders
+
+**Implementation Details:**
+
+- **Affected Files**: 
+    ```
+    ├── app\Filament\Resources\ProjectResource\RelationManagers\ApprovalChainsRelationManager.php
+    ├── app\Filament\Resources\ProjectResource.php
+    ├── app\Models\ApprovalChain.php
+    ├── app\Models\ApprovalChainUser.php
+    ├── app\Models\Project.php
+    ├── database\migrations\2025_10_27_143503_create_approval_chains_table.php
+    ├── database\migrations\2025_10_27_143648_create_approval_chain_users_table.php
+    ├── database\migrations\2025_10_27_143925_add_completed_status_to_project_statuses.php
+    ├── tests\Feature\ApprovalChainTest.php
+    ├── database\factories\ApprovalChainFactory.php
+    ├── database\factories\ApprovalChainUserFactory.php
+    ├── database\factories\ProjectFactory.php
+    └── database\factories\ProjectStatusFactory.php
+    ```
+- Provides full CRUD operations through Filament's admin interface
+- Real-time status updates with visual indicators
+- Role-based access control using existing project permissions
+- Automatic chain deactivation when creating new chains
+
+### Secondary Approach: RESTful API Controllers (Archived)
+
+A traditional REST API implementation was also developed as an alternative approach. This code has been moved to the `archive/` folder for reference.
+
+**Why it's less suitable:**
+
+- **Architectural Mismatch**: The project uses Filament as its primary interface, not traditional REST APIs
+- **Additional Overhead**: Requires separate frontend implementation to consume the API
+- **Inconsistent Patterns**: Deviates from how other features are implemented
+
+**Archived Files:**
+```
+archive/
+├── ApprovalChainController.php
+├── ProjectApprovalChainController.php
+├── api_routes.php
+└── openapi.yaml
+```
+
+## Project Setup
+
+### Prerequisites
 
 - PHP 8+
 - MySQL 8+
-- [Pusher](https://pusher.com/) account
+- Composer
+- NPM
 
-## Screenshots
+### Installation Steps
 
-<div>
-    <img src="github-contents/1.png" width="20%"></img> 
-    <img src="github-contents/2.png" width="20%"></img> 
-    <img src="github-contents/3.png" width="20%"></img> 
-    <img src="github-contents/4.png" width="20%"></img> 
-    <img src="github-contents/5.png" width="20%"></img> 
-    <img src="github-contents/6.png" width="20%"></img> 
-    <img src="github-contents/7.png" width="20%"></img> 
-    <img src="github-contents/8.png" width="20%"></img> 
-    <img src="github-contents/9.png" width="20%"></img> 
-    <img src="github-contents/10.png" width="20%"></img> 
-    <img src="github-contents/11.png" width="20%"></img> 
-    <img src="github-contents/12.png" width="20%"></img> 
-    <img src="github-contents/13.png" width="20%"></img> 
-    <img src="github-contents/14.png" width="20%"></img> 
-    <img src="github-contents/15.png" width="20%"></img> 
-    <img src="github-contents/16.png" width="20%"></img> 
-    <img src="github-contents/17.png" width="20%"></img> 
-    <img src="github-contents/18.png" width="20%"></img> 
-    <img src="github-contents/19.png" width="20%"></img> 
-    <img src="github-contents/20.png" width="20%"></img> 
-    <img src="github-contents/21.png" width="20%"></img> 
-    <img src="github-contents/22.png" width="20%"></img> 
-    <img src="github-contents/23.png" width="20%"></img> 
-    <img src="github-contents/24.png" width="20%"></img> 
-    <img src="github-contents/25.png" width="20%"></img> 
-    <img src="github-contents/26.png" width="20%"></img> 
-</div>
+1. **Clone the repository:**
 
-## Documentation
+```bash
+git https://github.com/KareemAlaa1/project-management.git
+cd project-management
+```
 
-Full documentation can be viewed online: [Docs](https://devaslanphp.github.io/project-management)
+2. **Install dependencies:**
 
-## Work in progress
+```bash
+# Backend dependencies
+composer install
 
-We are always working to make Project Management a better application, all contributions are welcome.
+# Frontend dependencies
+npm install
+```
 
-## Translations
+3. **Environment Configuration:**
 
-**Important:** translations are automatically generated by Google Translate (using a custom command), so if you find any errors please make sure you create a ticket or add your translations as a contribution to this repository.
+```bash
+# Copy environment file
+cp .env.example .env
+```
 
-## Credits
+4. **Database Setup:**
 
-- [All Contributors](https://github.com/devaslanphp/project-management/graphs/contributors)
+```bash
+# Run migrations
+php artisan migrate
 
-## License
+# Seed database with default data
+php artisan db:seed
+```
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+**Default Admin Credentials:**
+- Email: `john.doe@helper.app`
+- Password: `Passw@rd`
 
-## Releases
+5. **Build Assets:**
 
-- **Release 1.0.0**
-  - First Release
-- **Release 1.1.0**
-  - Add _Road Map_ feature
-  - Manage _Epics_ by projects
-- **Release 1.1.1**
-  - Add issue creation (dialog) into kanban view
-- **Release 1.1.2**
-  - Add Epic parent link (dependencies)
-- **Release 1.1.3**
-  - Translate missing langs
-- **Release 1.1.4**
-  - Bug-fix: Ticket content field (required)
-- **Release 1.1.5**
-  - Add comment field to ticket hours logging
-- **Release 1.1.6**
-    - Edit ticket epic details
-    - PR #13 made by @mihaisolomon
-- **Release 1.1.7**
-    - Ticket attachments
-- **Release 1.1.8**
-    - Time logged activities #25 PR integration
-    - #19 by @mihaisolomon : 
-      - Add new resource `Activity` to referential
-      - Add `Activity` to ticket time logging
-      - Add `Activity` column to Excel exportation
-- **Release 1.1.9**
-    - #32 Default user seeder enhancement
-    - #31 Issue resolved
-- **Release 1.2.0**
-    - Scrum module #28
-    - Design enhancement (Kanban / Scrum boards)
-    - Referential updates
-- **Release 1.2.1**
-    - Add jira integration #36
-    - New feature: Import jira projects / tickets
-- **Release 1.2.2**
-    - Dockerize application #23 
-    - PR #45 
-- **Release 1.2.3**
-    - Update german language #52
-    - SSO with OpenID (OIDC) #48
+```bash
+# For production
+npm run build
 
-### Thanks to anyone who helps make this project better :heart:
+# For development
+npm run dev
+```
 
-## Sponsors
+6. **Serve the application:**
 
-<div>
-    <a href="https://github.com/moustou1993"><img src="https://avatars.githubusercontent.com/u/48994051?v=4" width="40" /></a>
-    <a href="https://github.com/matbgn"><img src="https://avatars.githubusercontent.com/u/13169819?v=4" width="40" /></a>
-</div>
+```bash
+php artisan serve
+```
 
-## Contributors
+The application will be available at `http://localhost:8000`
 
-<div>
-    <a href="https://github.com/heloufir"><img src="https://avatars.githubusercontent.com/u/6197875?v=4" width="40" /></a>
-    <a href="https://github.com/mihaisolomon"><img src="https://avatars.githubusercontent.com/u/17908506?v=4" width="40" /></a>
-    <a href="https://github.com/TheZoker"><img src="https://avatars.githubusercontent.com/u/1368405?v=4" width="40" /></a>
-    <a href="https://github.com/JaccoVE"><img src="https://avatars.githubusercontent.com/u/34547046?v=4" width="40" /></a>
-    <a href="https://github.com/leozfr"><img src="https://avatars.githubusercontent.com/u/57966806?v=4" width="40" /></a>
-</div>
+## Approval Chain Feature Usage
 
-## Support us
+### Creating an Approval Chain
 
-<a href="https://www.buymeacoffee.com/heloufir" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+1. Navigate to a project in the Filament admin panel
+2. Click on the "Approval Chains" tab
+3. Click "Create" button
+4. Select users in the desired approval sequence
+5. The first user selected becomes the initial approver
+
+### Approving and Forwarding
+
+1. Navigate to a project with an active approval chain
+2. If you're the current approver, you'll see an "Approve & Forward" button
+3. Click the button and confirm
+4. The chain automatically moves to the next user
+5. When the last user approves, the project is marked as complete
+
+### Viewing Chain Status
+
+The approval chain table shows:
+- Sequence number for each approver
+- Current status (Pending, Current, Approved)
+- Approval timestamps
+- Approver information
+
+<img src="github-contents/27.jpg" width="49%"></img> 
+<img src="github-contents/28.jpg" width="49%"></img> 
+<img src="github-contents/29.jpg" width="49%"></img> 
+<img src="github-contents/30.jpg" width="49%"></img> 
+<img src="github-contents/31.jpg" width="49%"></img> 
+<img src="github-contents/32.jpg" width="49%"></img> 
+<img src="github-contents/33.jpg" width="49%"></img> 
+<img src="github-contents/34.jpg" width="49%"></img> 
+
+### Permissions
+
+- **Create/Delete Chains**: Project owners and managers
+- **View Chains**: Project owners, managers, and chain participants
+- **Approve**: Only the current approver in sequence
+
+## Database Schema
+
+### New Tables
+
+**approval_chains**
+```sql
+- id (primary key)
+- project_id (foreign key to projects)
+- created_by (foreign key to users)
+- is_active (boolean)
+- created_at, updated_at
+```
+
+**approval_chain_users**
+```sql
+- id (primary key)
+- approval_chain_id (foreign key to approval_chains)
+- user_id (foreign key to users)
+- sequence (integer, approval order)
+- is_current (boolean)
+- approved_at (timestamp, nullable)
+- approved_by (foreign key to users, nullable)
+- created_at, updated_at
+```
+
+### Relationships
+
+- Project `hasMany` ApprovalChain
+- ApprovalChain `belongsTo` Project
+- ApprovalChain `hasMany` ApprovalChainUser
+- ApprovalChainUser `belongsTo` User
+- ApprovalChainUser `belongsTo` ApprovalChain
+
+## Testing
+
+Run the feature tests:
+
+```bash
+php artisan test --filter ApprovalChain --coverage-html coverage-report
+```
+
+**Test Coverage:**
+
+- ✓ Creating approval chains
+- ✓ Validating unique users in chain
+- ✓ Sequential approval flow
+- ✓ Automatic project completion on final approval
+- ✓ Authorization checks
+- ✓ Chain deactivation on new chain creation
+
+<img src="github-contents/35.jpg" width="49%"></img> 
+<img src="github-contents/36.jpg" width="49%"></img> 
+## API Documentation
+
+While the primary implementation uses Filament, API endpoints are available through Filament's built-in API. The archived REST API controllers include full OpenAPI/Swagger documentation for reference.
+
+<img src="github-contents/37.jpg" width="99%"></img> 
+
+
