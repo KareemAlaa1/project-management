@@ -6,7 +6,7 @@ This submission implements an Approval Chain feature for the project management 
 
 ## Implementation Approaches
 
-### Primary Approach: Filament-Based Implementation (Recommended)
+### Primary Approach: Filament-Based Implementation
 
 The primary implementation leverages Filament's Relation Manager pattern, which is the native and preferred approach for this project's architecture. This approach is located in the main codebase.
 
