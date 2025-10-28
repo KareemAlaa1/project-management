@@ -60,6 +60,11 @@ class Project extends Model implements HasMedia
         return $this->hasMany(Sprint::class, 'project_id', 'id');
     }
 
+    public function approvalChains(): HasMany
+    {
+        return $this->hasMany(ApprovalChain::class, 'project_id', 'id');
+    }
+
     public function epicsFirstDate(): Attribute
     {
         return new Attribute(

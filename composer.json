@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "ext-iconv": "*",
+        "darkaonline/l5-swagger": "*",
         "devaslanphp/filament-avatar": "^1.0",
         "doctrine/dbal": "^3.5",
         "dutchcodingcompany/filament-socialite": "^0.2.2",
